@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Dashboard</title>
+    
+   <link href="https://fonts.googleapis.com/css?family=Catamaran:300,400,500,700|Roboto:300,400,500,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
+
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.min.js'></script>
+    <style>
+        
+        body { font-family:"Roboto"; font-size: 13px; color: #344444; padding-top: 80px;  }
+        div.skeleton { width: 700px; margin: 100px auto;  }
+    </style>
+
+  </head>
+
+  <body>
+        
+       <div class="container">
+           
+           <div class="row">
+               
+
+               <div class="col-12">
+                   <div class="jumbotron">
+                      <h1 class="display-3">Dashboard</h1>
+                      <hr>
+                  </div>  
+        
+
+               <div class="sleeping-hours">
+                   <p class="display-2" style="font-size:20px">Sleeping Hours : <strong class='slp-hours'></strong></p>
+               </div>
+
+               </div>
+               <br><br>
+               
+               <div class="col-6">
+                 <div class="card">
+                      <h6>Calorie Intake</h6>
+                      <canvas id="chart-1"></canvas>
+                 </div>
+               </div> 
+
+
+                <div class="col-6">
+                  <div class="card">
+                      <h6>Calorie Burned</h6>
+                     <canvas id="chart-2"></canvas>
+                  </div>
+                 </div> 
+
+
+              
+
+           </div> 
+
+       </div>
+
+       <script>
+           
+           jQuery(function(){
+
+                jQuery.ajax({
+
+     contentType: 'application/json',
+    dataType: "json",
+    url: "http://52.32.59.130:5000/",
+    success: function (data) {
+                    
+                    new Chart(document.getElementById("chart-1"), {
+            type: 'doughnut',
+            data:  {
+                        labels: [
+                            "Calorie Burned",
+                            "Goal Calorie Burned"
+                        ],
+                        datasets: [
+                            {
+                                data: [data.dailyActivity.cal_burned,data.dailyActivity.goal_cal_burned],
+                                backgroundColor: [
+                                    "#FF6384",
+                                    "#36A2EB"
+                                ]
+                            }]
+                    } ,
+            options: {}
+        });
+
+                   
+        new Chart(document.getElementById("chart-2"), {
+            type: 'doughnut',
+            data:  {
+                        labels: [
+                            "Calorie Intake",
+                            "Goal Calorie Intake"
+                        ],
+                        datasets: [
+                            {
+                                data: [data.dailyActivity.cal_intake,data.dailyActivity.goal_cal_intake],
+                                backgroundColor: [
+                                    "#FF6384",
+                                    "#36A2EB"
+                                ]
+                            }]
+                    } ,
+            options: {}
+        });
+
+            console.log(data);
+          jQuery('.slp-hours').html(data.dailyActivity.hours_sleep);
+
+                },
+    error: function(data, errorThrown)
+          {
+          }
+
+});
+
+
+
+    
+
+
+           });
+
+       </script>
+  </body>
+</html>
